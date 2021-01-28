@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ReportTrackerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Accident">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgramID" Type="int" Nullable="false" />
+          <Property Name="AccidentID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="AccidentDate" Type="date" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="InsertDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccidentProgram">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProgramName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="URL" Type="varchar" MaxLength="2000" />
+          <Property Name="EmailTemplateID" Type="varchar" MaxLength="200" />
+          <Property Name="ProgramDescription" Type="varchar" MaxLength="200" />
+          <Property Name="ProgramDataElementDescriptions" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="AlertAudit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgramID" Type="int" Nullable="false" />
+          <Property Name="SubscriberID" Type="bigint" Nullable="false" />
+          <Property Name="message" Type="varchar" MaxLength="2000" Nullable="false" />
+          <Property Name="InsertDateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="JobStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgramID" Type="int" Nullable="false" />
+          <Property Name="LastRunDateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastRunStatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="LastRunErrorState" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastRunError" Type="varchar" MaxLength="1600" Nullable="false" />
+          <Property Name="NewAccidentCount" Type="int" Nullable="false" />
+          <Property Name="ExportDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Subscriber">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="100" />
+          <Property Name="Phone" Type="varchar" MaxLength="50" />
+          <Property Name="NotifyEmail" Type="bit" Nullable="false" />
+          <Property Name="NotifySMS" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subscription">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProgramId" Type="int" Nullable="false" />
+          <Property Name="SubscriberID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Accident_ToProgram">
+          <End Role="AccidentProgram" Type="Self.AccidentProgram" Multiplicity="1" />
+          <End Role="Accident" Type="Self.Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccidentProgram">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="ProgramID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertAudit_Program">
+          <End Role="AccidentProgram" Type="Self.AccidentProgram" Multiplicity="1" />
+          <End Role="AlertAudit" Type="Self.AlertAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccidentProgram">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AlertAudit">
+              <PropertyRef Name="ProgramID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertAudit_Subscriber">
+          <End Role="Subscriber" Type="Self.Subscriber" Multiplicity="1" />
+          <End Role="AlertAudit" Type="Self.AlertAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AlertAudit">
+              <PropertyRef Name="SubscriberID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Subscription_Program">
+          <End Role="AccidentProgram" Type="Self.AccidentProgram" Multiplicity="1" />
+          <End Role="Subscription" Type="Self.Subscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccidentProgram">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Subscription">
+              <PropertyRef Name="ProgramId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Subscription_Subscriber">
+          <End Role="Subscriber" Type="Self.Subscriber" Multiplicity="1" />
+          <End Role="Subscription" Type="Self.Subscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Subscription">
+              <PropertyRef Name="SubscriberID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ReportTrackerModelStoreContainer">
+          <EntitySet Name="Accident" EntityType="Self.Accident" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccidentProgram" EntityType="Self.AccidentProgram" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AlertAudit" EntityType="Self.AlertAudit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobStatus" EntityType="Self.JobStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subscriber" EntityType="Self.Subscriber" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subscription" EntityType="Self.Subscription" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Accident_ToProgram" Association="Self.FK_Accident_ToProgram">
+            <End Role="AccidentProgram" EntitySet="AccidentProgram" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertAudit_Program" Association="Self.FK_AlertAudit_Program">
+            <End Role="AccidentProgram" EntitySet="AccidentProgram" />
+            <End Role="AlertAudit" EntitySet="AlertAudit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertAudit_Subscriber" Association="Self.FK_AlertAudit_Subscriber">
+            <End Role="Subscriber" EntitySet="Subscriber" />
+            <End Role="AlertAudit" EntitySet="AlertAudit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Subscription_Program" Association="Self.FK_Subscription_Program">
+            <End Role="AccidentProgram" EntitySet="AccidentProgram" />
+            <End Role="Subscription" EntitySet="Subscription" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Subscription_Subscriber" Association="Self.FK_Subscription_Subscriber">
+            <End Role="Subscriber" EntitySet="Subscriber" />
+            <End Role="Subscription" EntitySet="Subscription" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ReportTrackerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="ReportTrackerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accident" EntityType="ReportTrackerModel.Accident" />
+          <EntitySet Name="Subscriber" EntityType="ReportTrackerModel.Subscriber" />
+          <EntitySet Name="Subscription" EntityType="ReportTrackerModel.Subscription" />
+          <AssociationSet Name="FK_Subscription_Subscriber" Association="ReportTrackerModel.FK_Subscription_Subscriber">
+            <End Role="Subscriber" EntitySet="Subscriber" />
+            <End Role="Subscription" EntitySet="Subscription" />
+          </AssociationSet>
+          <EntitySet Name="JobStatus" EntityType="ReportTrackerModel.JobStatus" />
+          <EntitySet Name="AlertAudit" EntityType="ReportTrackerModel.AlertAudit" />
+          <AssociationSet Name="FK_AlertAudit_Subscriber" Association="ReportTrackerModel.FK_AlertAudit_Subscriber">
+            <End Role="Subscriber" EntitySet="Subscriber" />
+            <End Role="AlertAudit" EntitySet="AlertAudit" />
+          </AssociationSet>
+          <EntitySet Name="AccidentProgram" EntityType="ReportTrackerModel.AccidentProgram" />
+          <AssociationSet Name="FK_Accident_ToProgram" Association="ReportTrackerModel.FK_Accident_ToProgram">
+            <End Role="AccidentProgram" EntitySet="AccidentProgram" />
+            <End Role="Accident" EntitySet="Accident" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AlertAudit_Program" Association="ReportTrackerModel.FK_AlertAudit_Program">
+            <End Role="AccidentProgram" EntitySet="AccidentProgram" />
+            <End Role="AlertAudit" EntitySet="AlertAudit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Subscription_Program" Association="ReportTrackerModel.FK_Subscription_Program">
+            <End Role="AccidentProgram" EntitySet="AccidentProgram" />
+            <End Role="Subscription" EntitySet="Subscription" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Accident">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgramID" Type="Int32" Nullable="false" />
+          <Property Name="AccidentID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AccidentDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="InsertDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AccidentProgram" Relationship="ReportTrackerModel.FK_Accident_ToProgram" FromRole="Accident" ToRole="AccidentProgram" />
+        </EntityType>
+        <EntityType Name="Subscriber">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NotifyEmail" Type="Boolean" Nullable="false" />
+          <Property Name="NotifySMS" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Subscription" Relationship="ReportTrackerModel.FK_Subscription_Subscriber" FromRole="Subscriber" ToRole="Subscription" />
+          <NavigationProperty Name="AlertAudit" Relationship="ReportTrackerModel.FK_AlertAudit_Subscriber" FromRole="Subscriber" ToRole="AlertAudit" />
+        </EntityType>
+        <EntityType Name="Subscription">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgramId" Type="Int32" Nullable="false" />
+          <Property Name="SubscriberID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Subscriber" Relationship="ReportTrackerModel.FK_Subscription_Subscriber" FromRole="Subscription" ToRole="Subscriber" />
+          <NavigationProperty Name="AccidentProgram" Relationship="ReportTrackerModel.FK_Subscription_Program" FromRole="Subscription" ToRole="AccidentProgram" />
+        </EntityType>
+        <Association Name="FK_Subscription_Subscriber">
+          <End Type="ReportTrackerModel.Subscriber" Role="Subscriber" Multiplicity="1" />
+          <End Type="ReportTrackerModel.Subscription" Role="Subscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Subscription">
+              <PropertyRef Name="SubscriberID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="JobStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgramID" Type="Int32" Nullable="false" />
+          <Property Name="LastRunDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastRunStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="LastRunErrorState" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastRunError" Type="String" Nullable="false" MaxLength="1600" FixedLength="false" Unicode="false" />
+          <Property Name="NewAccidentCount" Type="Int32" Nullable="false" />
+          <Property Name="ExportDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="AlertAudit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProgramID" Type="Int32" Nullable="false" />
+          <Property Name="SubscriberID" Type="Int64" Nullable="false" />
+          <Property Name="message" Type="String" Nullable="false" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="InsertDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Subscriber" Relationship="ReportTrackerModel.FK_AlertAudit_Subscriber" FromRole="AlertAudit" ToRole="Subscriber" />
+          <NavigationProperty Name="AccidentProgram" Relationship="ReportTrackerModel.FK_AlertAudit_Program" FromRole="AlertAudit" ToRole="AccidentProgram" />
+        </EntityType>
+        <Association Name="FK_AlertAudit_Subscriber">
+          <End Type="ReportTrackerModel.Subscriber" Role="Subscriber" Multiplicity="1" />
+          <End Type="ReportTrackerModel.AlertAudit" Role="AlertAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriber">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AlertAudit">
+              <PropertyRef Name="SubscriberID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AccidentProgram">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProgramName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="URL" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="EmailTemplateID" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ProgramDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ProgramDataElementDescriptions" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Accident" Relationship="ReportTrackerModel.FK_Accident_ToProgram" FromRole="AccidentProgram" ToRole="Accident" />
+          <NavigationProperty Name="AlertAudit" Relationship="ReportTrackerModel.FK_AlertAudit_Program" FromRole="AccidentProgram" ToRole="AlertAudit" />
+          <NavigationProperty Name="Subscription" Relationship="ReportTrackerModel.FK_Subscription_Program" FromRole="AccidentProgram" ToRole="Subscription" />
+        </EntityType>
+        <Association Name="FK_Accident_ToProgram">
+          <End Type="ReportTrackerModel.AccidentProgram" Role="AccidentProgram" Multiplicity="1" />
+          <End Type="ReportTrackerModel.Accident" Role="Accident" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccidentProgram">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Accident">
+              <PropertyRef Name="ProgramID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AlertAudit_Program">
+          <End Type="ReportTrackerModel.AccidentProgram" Role="AccidentProgram" Multiplicity="1" />
+          <End Type="ReportTrackerModel.AlertAudit" Role="AlertAudit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccidentProgram">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AlertAudit">
+              <PropertyRef Name="ProgramID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Subscription_Program">
+          <End Type="ReportTrackerModel.AccidentProgram" Role="AccidentProgram" Multiplicity="1" />
+          <End Type="ReportTrackerModel.Subscription" Role="Subscription" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccidentProgram">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Subscription">
+              <PropertyRef Name="ProgramId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ReportTrackerModelStoreContainer" CdmEntityContainer="ReportTrackerEntities">
+          <EntitySetMapping Name="Accident">
+            <EntityTypeMapping TypeName="ReportTrackerModel.Accident">
+              <MappingFragment StoreEntitySet="Accident">
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccidentDate" ColumnName="AccidentDate" />
+                <ScalarProperty Name="AccidentID" ColumnName="AccidentID" />
+                <ScalarProperty Name="ProgramID" ColumnName="ProgramID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subscriber">
+            <EntityTypeMapping TypeName="ReportTrackerModel.Subscriber">
+              <MappingFragment StoreEntitySet="Subscriber">
+                <ScalarProperty Name="NotifySMS" ColumnName="NotifySMS" />
+                <ScalarProperty Name="NotifyEmail" ColumnName="NotifyEmail" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subscription">
+            <EntityTypeMapping TypeName="ReportTrackerModel.Subscription">
+              <MappingFragment StoreEntitySet="Subscription">
+                <ScalarProperty Name="SubscriberID" ColumnName="SubscriberID" />
+                <ScalarProperty Name="ProgramId" ColumnName="ProgramId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobStatus">
+            <EntityTypeMapping TypeName="ReportTrackerModel.JobStatus">
+              <MappingFragment StoreEntitySet="JobStatus">
+                <ScalarProperty Name="ExportDateTime" ColumnName="ExportDateTime" />
+                <ScalarProperty Name="NewAccidentCount" ColumnName="NewAccidentCount" />
+                <ScalarProperty Name="LastRunError" ColumnName="LastRunError" />
+                <ScalarProperty Name="LastRunErrorState" ColumnName="LastRunErrorState" />
+                <ScalarProperty Name="LastRunStatus" ColumnName="LastRunStatus" />
+                <ScalarProperty Name="LastRunDateTime" ColumnName="LastRunDateTime" />
+                <ScalarProperty Name="ProgramID" ColumnName="ProgramID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AlertAudit">
+            <EntityTypeMapping TypeName="ReportTrackerModel.AlertAudit">
+              <MappingFragment StoreEntitySet="AlertAudit">
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="SubscriberID" ColumnName="SubscriberID" />
+                <ScalarProperty Name="ProgramID" ColumnName="ProgramID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccidentProgram">
+            <EntityTypeMapping TypeName="ReportTrackerModel.AccidentProgram">
+              <MappingFragment StoreEntitySet="AccidentProgram">
+                <ScalarProperty Name="ProgramDataElementDescriptions" ColumnName="ProgramDataElementDescriptions" />
+                <ScalarProperty Name="ProgramDescription" ColumnName="ProgramDescription" />
+                <ScalarProperty Name="EmailTemplateID" ColumnName="EmailTemplateID" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="ProgramName" ColumnName="ProgramName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6e609ea3abf843fdb3ca81f0223da0a7" Name="Diagram1">
+        <EntityTypeShape EntityType="ReportTrackerModel.Accident" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="ReportTrackerModel.Subscriber" Width="1.5" PointX="4.75" PointY="5" />
+        <EntityTypeShape EntityType="ReportTrackerModel.Subscription" Width="1.5" PointX="7" PointY="0.75" />
+        <AssociationConnector Association="ReportTrackerModel.FK_Subscription_Subscriber" />
+        <EntityTypeShape EntityType="ReportTrackerModel.JobStatus" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="ReportTrackerModel.AlertAudit" Width="1.5" PointX="7" PointY="4.125" />
+        <AssociationConnector Association="ReportTrackerModel.FK_AlertAudit_Subscriber" />
+        <EntityTypeShape EntityType="ReportTrackerModel.AccidentProgram" Width="1.5" PointX="0.75" PointY="2.25" />
+        <AssociationConnector Association="ReportTrackerModel.FK_Accident_ToProgram" />
+        <AssociationConnector Association="ReportTrackerModel.FK_AlertAudit_Program" />
+        <AssociationConnector Association="ReportTrackerModel.FK_Subscription_Program" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

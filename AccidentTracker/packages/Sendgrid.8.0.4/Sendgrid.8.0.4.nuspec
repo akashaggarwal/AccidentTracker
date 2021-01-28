@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Sendgrid</id>
+    <version>8.0.4</version>
+    <title>SendGrid</title>
+    <authors>CJ Buchmann, Tyler Bischel, Eric Becking, Brandon West, Elmer Thomas</authors>
+    <owners>CJ Buchmann, Tyler Bischel, Eric Becking, Brandon West, Elmer Thomas</owners>
+    <licenseUrl>https://github.com/sendgrid/sendgrid-csharp/blob/master/MIT.LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sendgrid/sendgrid-csharp</projectUrl>
+    <iconUrl>https://pbs.twimg.com/profile_images/580745391617880064/rrsj746a.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>C# client library and examples for using SendGrid API's to send mail and access Web API v3 endpoints. Github repo located at : https://github.com/sendgrid/sendgrid-csharp</description>
+    <summary>C# client library and examples for using SendGrid API's to send mail and access Web API v3 endpoints.</summary>
+    <releaseNotes>### Added
+- Table of Contents in the README
+- Added a [USE_CASES.md](https://github.com/sendgrid/sendgrid-csharp/blob/master/USE_CASES.md) section, with the first use case example for transactional templates</releaseNotes>
+    <copyright>Copyright 2012-2016</copyright>
+    <tags>SendGrid Email Mail Microsoft Azure</tags>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="SendGrid.CSharp.HTTP.Client" version="3.0.0" />
+    </dependencies>
+  </metadata>
+</package>
